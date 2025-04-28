@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AkaratiCheckScanner;
 using Newtonsoft.Json;
 using ScanCRNet;
 using ScanCRNet.Utility;
@@ -20,6 +21,9 @@ namespace SimpleScan
         ScanPage sp = new ScanPage();
         static ScanCRNet.Base.LPFNSCANCALLBACK fnDecidePocket;
         private bool bScanning;
+        private const string NumberTextBox = "Number";
+        private const string DateTextBox = "Date";
+        private const string AmountTextBox = "Amount";
 
 
         public MainForm()
@@ -600,6 +604,67 @@ namespace SimpleScan
                 }
                 image.Save(Path.Combine("Output", fileName), System.Drawing.Imaging.ImageFormat.Jpeg);
             }
+
+            GetChequeModel();
+        }
+
+
+
+        private object GetChequeModel()
+        {
+            CreateChequesRequestDto createChequesRequestDto = new CreateChequesRequestDto();
+
+            createChequesRequestDto.CustomerParticipantId = comboBox1.SelectedIndex;
+
+            foreach (var layoutpanel in pnlContainer.Controls)
+            {
+
+                if (layoutpanel is FlowLayoutPanel)
+                {
+                    var lPanel = layoutpanel as FlowLayoutPanel;
+                    foreach (var gb in lPanel.Controls)
+                    {
+                        if (gb is GroupBox)
+                        {
+                            var lGroup = gb as GroupBox;
+                            foreach (var control in lGroup.Controls)
+                            {
+                                if (control is PictureBox)
+                                {
+
+                                }
+                                if (control is TextBox)
+                                {
+                                    var c = control as TextBox;
+                                    switch (c.Name)
+                                    {
+                                        case NumberTextBox:
+                                            {
+                                                break;
+                                            }
+
+                                        case DateTextBox:
+                                            {
+                                                break;
+                                            }
+                                        case AmountTextBox:
+                                            {
+                                                break;
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return createChequesRequestDto;
+        }
+
+        private void CallAddChequeAPI()
+        {
+
         }
 
         private async void comboBox2_TextChanged(object sender, EventArgs e)
@@ -608,27 +673,27 @@ namespace SimpleScan
             if (userInput.Length > 2)
             {
                 var suggestions = await GetCustomersApiCallAsync(userInput);
-                AutoCompleteStringCollection autoCompleteData = new AutoCompleteStringCollection();
-                foreach (var suggestion in suggestions)
-                {
-                    autoCompleteData.Insert(suggestion.Key, suggestion.Value);
-                }
-                comboBox2.AutoCompleteCustomSource = autoCompleteData;
+                comboBox2.DisplayMember = "Name";
+                comboBox2.ValueMember = "Id";
+                comboBox2.Items.AddRange(suggestions.ToArray());
             }
         }
 
-        private async Task<Dictionary<int, string>> GetCustomersApiCallAsync(string searchTerm)
+        private async Task<List<LookupItem>> GetCustomersApiCallAsync(string searchTerm)
         {
-            Dictionary<int, string> suggestions = new Dictionary<int, string>();
             try
             {
                 // Replace with your actual API endpoint
-                var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
+                // var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
+                var baseUrl = "http://localhost:5049/v1";
+                baseUrl = baseUrl + "/lookups/customers";
                 string apiUrl = $"{baseUrl}/{searchTerm}";
-
+                
                 // Send the API request and get the response
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {GlobalSetting.AuthToken}");
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
                     response.EnsureSuccessStatusCode();  // Throws an exception if the status code is not successful
 
@@ -636,7 +701,8 @@ namespace SimpleScan
                     string responseContent = await response.Content.ReadAsStringAsync();
 
                     // Parse the API response (Assuming JSON in this case)
-                    suggestions = JsonConvert.DeserializeObject<Dictionary<int, string>>(responseContent);
+                    var suggestions = JsonConvert.DeserializeObject<List<LookupItem>>(responseContent);
+                    return suggestions;
 
                 }
 
@@ -646,8 +712,15 @@ namespace SimpleScan
             {
                 // Handle API errors (e.g., network issues, invalid response, etc.)
                 MessageBox.Show($"Error fetching suggestions: {ex.Message}");
+                return null;
             }
-            return suggestions;
         }
     }
+
+    public class LookupItem
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+    };
+
 }
