@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 using ScanCRNet;
 using ScanCRNet.Utility;
 using Image = System.Drawing.Image;
@@ -31,6 +36,20 @@ namespace SimpleScan
             sp.OnPageComp += OnPage;
             sp.OnePageComp += OnItem;
             sp.ScanComp += OnScanDone;
+        }
+
+
+        protected override void OnLoad(EventArgs e)
+        {
+            string imageFolder = @"./Output"; // Update this to your folder path
+            string[] imageFiles = Directory.GetFiles(imageFolder, "*.jpeg"); // Or *.png, etc.
+            foreach (string file in imageFiles)
+            {
+                Images.Add(Image.FromFile(file));
+            }
+
+            LoadImagesWithPagination();
+            base.OnLoad(e);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -432,14 +451,20 @@ namespace SimpleScan
 
         private void DisplayTwoColumnImages(Bitmap[] images)
         {
-            int columnWidth = (pnlContainer.ClientSize.Width - 30) / 2;
+            int columnWidth = 400;
             int padding = 10;
             int xLeft = 5;
             int xRight = columnWidth + 20;
             int yLeft = padding;
             int yRight = padding;
 
-
+            FlowLayoutPanel imagesLayoutPanel = new FlowLayoutPanel()
+            {
+                AutoSize = true,
+                WrapContents = true,
+                FlowDirection = FlowDirection.LeftToRight,
+                Dock = DockStyle.Top
+            };
             for (int i = 0; i < images.Length; i++)
             {
                 Bitmap img = images[i];
@@ -451,21 +476,29 @@ namespace SimpleScan
                 var pb = new PictureBox
                 {
                     Image = img,
+                    Name = i.ToString(),
                     SizeMode = PictureBoxSizeMode.Zoom,
                     Width = columnWidth,
                     Height = displayHeight,
                     BackColor = System.Drawing.SystemColors.AppWorkspace,
                     BorderStyle = BorderStyle.Fixed3D,
-                    Location = isLeftColumn
-                        ? new Point(xLeft, yLeft)
-                        : new Point(xRight, yRight)
                 };
 
+
+
+                GroupBox groupBox = new GroupBox()
+                {
+                    Name = pb.Name,
+                    AutoSize = true,
+                };
+
+
+                groupBox.Controls.Add(pb);
+
                 //TODO: Addd Textboxes here
+                AddTxtBoxesUnderPictureBox(pb, groupBox);
 
-                AddTxtBoxesUnderPictureBox(pb, pnlContainer);
-
-                pnlContainer.Controls.Add(pb);
+                imagesLayoutPanel.Controls.Add(groupBox);
 
                 if (isLeftColumn)
                     yLeft += displayHeight + padding;
@@ -473,39 +506,40 @@ namespace SimpleScan
                     yRight += displayHeight + padding;
             }
 
+            pnlContainer.Controls.Add(imagesLayoutPanel);
+
             // Add bottom padding
             pnlContainer.Controls.Add(new Panel { Height = padding });
         }
 
-        private void AddTxtBoxesUnderPictureBox(PictureBox pb, Panel pnlContainer)
+        private void AddTxtBoxesUnderPictureBox(PictureBox pb, GroupBox groupBox)
         {
-            int textBoxWidth = 100;
-            int textBoxHeight = 25;
-            int spacing = 10;
+            int textBoxWidth = 130;
+            int spacing = 20;
 
             TextBox NumbertxtBox = new TextBox();
+            NumbertxtBox.Name = "Number";
             NumbertxtBox.Width = textBoxWidth;
-            NumbertxtBox.Height = textBoxHeight;
             NumbertxtBox.Left = pb.Left;
             NumbertxtBox.Top = pb.Bottom + spacing;
             AddPlaceholder(NumbertxtBox, "Number");
 
             TextBox DatetxtBox = new TextBox();
+            DatetxtBox.Name = "Date";
             DatetxtBox.Width = textBoxWidth;
-            DatetxtBox.Height = textBoxHeight;
             DatetxtBox.Left = pb.Left + 1 * (textBoxWidth + spacing);
             DatetxtBox.Top = pb.Bottom + spacing;
-            AddPlaceholder(DatetxtBox, "Number");
+            AddPlaceholder(DatetxtBox, "Date");
 
 
             TextBox AmounttxtBox = new TextBox();
-            DatetxtBox.Width = textBoxWidth;
-            DatetxtBox.Height = textBoxHeight;
-            DatetxtBox.Left = pb.Left + 2 * (textBoxWidth + spacing);
-            DatetxtBox.Top = pb.Bottom + spacing;
-            AddPlaceholder(AmounttxtBox, "Number");
+            AmounttxtBox.Name = "Amount";
+            AmounttxtBox.Width = textBoxWidth;
+            AmounttxtBox.Left = pb.Left + 2 * (textBoxWidth + spacing);
+            AmounttxtBox.Top = pb.Bottom + spacing;
+            AddPlaceholder(AmounttxtBox, "Amount");
 
-            pnlContainer.Controls.AddRange(new Control[] { NumbertxtBox, DatetxtBox, AmounttxtBox });
+            groupBox.Controls.AddRange(new Control[] { NumbertxtBox, DatetxtBox, AmounttxtBox });
         }
 
         private void AddPlaceholder(TextBox textBox, string placeholder)
@@ -566,6 +600,54 @@ namespace SimpleScan
                 }
                 image.Save(Path.Combine("Output", fileName), System.Drawing.Imaging.ImageFormat.Jpeg);
             }
+        }
+
+        private async void comboBox2_TextChanged(object sender, EventArgs e)
+        {
+            string userInput = comboBox2.Text;
+            if (userInput.Length > 2)
+            {
+                var suggestions = await GetCustomersApiCallAsync(userInput);
+                AutoCompleteStringCollection autoCompleteData = new AutoCompleteStringCollection();
+                foreach (var suggestion in suggestions)
+                {
+                    autoCompleteData.Insert(suggestion.Key, suggestion.Value);
+                }
+                comboBox2.AutoCompleteCustomSource = autoCompleteData;
+            }
+        }
+
+        private async Task<Dictionary<int, string>> GetCustomersApiCallAsync(string searchTerm)
+        {
+            Dictionary<int, string> suggestions = new Dictionary<int, string>();
+            try
+            {
+                // Replace with your actual API endpoint
+                var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
+                string apiUrl = $"{baseUrl}/{searchTerm}";
+
+                // Send the API request and get the response
+                using (HttpClient client = new HttpClient())
+                {
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+                    response.EnsureSuccessStatusCode();  // Throws an exception if the status code is not successful
+
+                    // Read the API response
+                    string responseContent = await response.Content.ReadAsStringAsync();
+
+                    // Parse the API response (Assuming JSON in this case)
+                    suggestions = JsonConvert.DeserializeObject<Dictionary<int, string>>(responseContent);
+
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                // Handle API errors (e.g., network issues, invalid response, etc.)
+                MessageBox.Show($"Error fetching suggestions: {ex.Message}");
+            }
+            return suggestions;
         }
     }
 }

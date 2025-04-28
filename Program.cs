@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AkaratiCheckScanner;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -11,7 +12,7 @@ namespace SimpleScan
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new LoginForm());
         }
     }
 }
