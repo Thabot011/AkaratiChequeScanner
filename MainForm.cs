@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AkaratiCheckScanner;
 using Newtonsoft.Json;
 using ScanCRNet;
 using ScanCRNet.Utility;
@@ -20,6 +22,9 @@ namespace SimpleScan
         ScanPage sp = new ScanPage();
         static ScanCRNet.Base.LPFNSCANCALLBACK fnDecidePocket;
         private bool bScanning;
+        private const string NumberTextBox = "Number";
+        private const string DateTextBox = "Date";
+        private const string AmountTextBox = "Amount";
 
 
         public MainForm()
@@ -600,6 +605,86 @@ namespace SimpleScan
                 }
                 image.Save(Path.Combine("Output", fileName), System.Drawing.Imaging.ImageFormat.Jpeg);
             }
+
+          var createChequeModel =  GetChequeModel();
+
+            CallAddChequeAPI();
+        }
+
+
+
+        private CreateChequesRequestDto GetChequeModel()
+        {
+            CreateChequesRequestDto createChequesRequestDto = new CreateChequesRequestDto();
+
+            createChequesRequestDto.CustomerParticipantId = comboBox1.SelectedIndex;
+
+            createChequesRequestDto.Cheques = new List<ChequeDto>();
+
+            foreach (var layoutpanel in pnlContainer.Controls)
+            {
+
+                if (layoutpanel is FlowLayoutPanel)
+                {
+                    var lPanel = layoutpanel as FlowLayoutPanel;
+                    foreach (var gb in lPanel.Controls)
+                    {
+                        ChequeDto chequeDto = new ChequeDto();
+                        if (gb is GroupBox)
+                        {
+                            var lGroup = gb as GroupBox;
+                            foreach (var control in lGroup.Controls)
+                            {
+                                if (control is PictureBox)
+                                {
+                                    var image = control as PictureBox;
+
+                                    using (MemoryStream ms = new MemoryStream())
+                                    {
+                                        image.Image.Save(ms, ImageFormat.Jpeg);
+                                        chequeDto.Image.ImageData = ms.ToArray();
+                                        chequeDto.Image.Extension = "Jpeg";
+                                    }
+                                }
+                                if (control is TextBox)
+                                {
+                                    var c = control as TextBox;
+                                    switch (c.Name)
+                                    {
+                                        case NumberTextBox:
+                                            {
+                                                chequeDto.Number = c.Text;
+                                                break;
+                                            }
+
+                                        case DateTextBox:
+                                            {
+                                                DateTime.TryParse(c.Text, out DateTime dueDate);
+                                                chequeDto.DueDate = dueDate;
+                                                break;
+                                            }
+                                        case AmountTextBox:
+                                            {
+                                                decimal.TryParse(c.Text, out decimal amount);
+                                                chequeDto.Amount = amount;
+                                                break;
+                                            }
+                                    }
+                                }
+                            }
+                        }
+
+                        createChequesRequestDto.Cheques.Add(chequeDto);
+                    }
+                }
+            }
+
+            return createChequesRequestDto;
+        }
+
+        private void CallAddChequeAPI()
+        {
+
         }
 
         private async void comboBox2_TextChanged(object sender, EventArgs e)
@@ -613,7 +698,8 @@ namespace SimpleScan
                 {
                     autoCompleteData.Insert(suggestion.Key, suggestion.Value);
                 }
-                comboBox2.AutoCompleteCustomSource = autoCompleteData;
+                comboBox2.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+
             }
         }
 
