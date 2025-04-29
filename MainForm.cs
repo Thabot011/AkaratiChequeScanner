@@ -14,7 +14,6 @@ using AkaratiCheckScanner;
 using Newtonsoft.Json;
 using ScanCRNet;
 using ScanCRNet.Utility;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using Image = System.Drawing.Image;
 
 namespace SimpleScan
@@ -90,10 +89,10 @@ namespace SimpleScan
             {
                 bProbed = b;
 
-                foreach (Control ctrl in listRegistered)
-                {
-                    ctrl.Enabled = b;
-                }
+                //foreach (Control ctrl in listRegistered)
+                //{
+                //    ctrl.Enabled = b;
+                //}
 
                 return bProbed;
             }
@@ -407,13 +406,8 @@ namespace SimpleScan
         {
             if (Images == null || Images.Count == 0)
             {
-                btnPrevious.Enabled = false;
-                btnNext.Enabled = false;
                 return;
             }
-
-            btnPrevious.Enabled = currentPage > 0;
-            btnNext.Enabled = (currentPage + 1) * ItemsPerPage < Images.Count;
         }
         private void Reset()
         {
@@ -450,8 +444,8 @@ namespace SimpleScan
 
             if (itemsToShow <= 0) return;
 
-            var pageImages = new Bitmap[itemsToShow];
-            Array.Copy(Images.ToArray(), startIndex, pageImages, 0, itemsToShow);
+            var pageImages = new Bitmap[Images.Count];
+            Array.Copy(Images.ToArray(), pageImages, Images.Count);
 
             DisplayTwoColumnImages(pageImages);
         }
@@ -531,12 +525,12 @@ namespace SimpleScan
             NumbertxtBox.Top = pb.Bottom + spacing;
             AddPlaceholder(NumbertxtBox, "Number");
 
-            TextBox DatetxtBox = new TextBox();
-            DatetxtBox.Name = "Date";
-            DatetxtBox.Width = textBoxWidth;
-            DatetxtBox.Left = pb.Left + 1 * (textBoxWidth + spacing);
-            DatetxtBox.Top = pb.Bottom + spacing;
-            AddPlaceholder(DatetxtBox, "Date");
+            DateTimePicker datePicker = new DateTimePicker();
+            datePicker.Name = "Date";
+            datePicker.Width = textBoxWidth;
+            datePicker.Left = pb.Left + 1 * (textBoxWidth + spacing);
+            datePicker.Top = pb.Bottom + spacing;
+            //AddPlaceholder(datePicker, "Date");
 
 
             TextBox AmounttxtBox = new TextBox();
@@ -546,7 +540,7 @@ namespace SimpleScan
             AmounttxtBox.Top = pb.Bottom + spacing;
             AddPlaceholder(AmounttxtBox, "Amount");
 
-            groupBox.Controls.AddRange(new Control[] { NumbertxtBox, DatetxtBox, AmounttxtBox });
+            groupBox.Controls.AddRange(new Control[] { NumbertxtBox, datePicker, AmounttxtBox });
         }
 
         private void AddPlaceholder(TextBox textBox, string placeholder)
@@ -615,7 +609,9 @@ namespace SimpleScan
                 return;
             }
 
+            this.Enabled = false;
             await CallAddChequeAPIAsync(createChequeModel);
+            this.Enabled = true;
             MessageBox.Show("Cheque request is created successfully");
         }
 
@@ -623,104 +619,113 @@ namespace SimpleScan
 
         private CreateChequesRequestDto GetChequeModel()
         {
-            if (comboBox2.SelectedValue == null)
-            {
-                MessageBox.Show("Please select a customer");
-                return null;
-            }
-
-            if (comboBox4.SelectedValue == null)
-            {
-                MessageBox.Show("Please select a bank");
-                return null;
-            }
-
-            if(string.IsNullOrEmpty(textBox1.Text))
-            {
-                MessageBox.Show("name on cheque is required");
-                return null;
-            }
-
             CreateChequesRequestDto createChequesRequestDto = new CreateChequesRequestDto();
 
-            createChequesRequestDto.CustomerParticipantId = (long)comboBox1.SelectedValue;
-            createChequesRequestDto.BankId = (long)comboBox4.SelectedValue;
-            createChequesRequestDto.NameOnCheque = textBox1.Text;
-
-            createChequesRequestDto.Cheques = new List<ChequeDto>();
-
-            foreach (var layoutpanel in pnlContainer.Controls)
+            try
             {
-
-                if (layoutpanel is FlowLayoutPanel)
+                if (comboBox2.SelectedValue == null && long.TryParse(comboBox2.SelectedValue.ToString(), out var _))
                 {
-                    var lPanel = layoutpanel as FlowLayoutPanel;
-                    foreach (var gb in lPanel.Controls)
+                    MessageBox.Show("Please select a customer");
+                    return null;
+                }
+
+                if (comboBox4.SelectedValue == null && long.TryParse(comboBox4.SelectedValue.ToString(), out var _))
+                {
+                    MessageBox.Show("Please select a bank");
+                    return null;
+                }
+
+                if (string.IsNullOrEmpty(textBox1.Text))
+                {
+                    MessageBox.Show("name on cheque is required");
+                    return null;
+                }
+
+
+                createChequesRequestDto.CustomerParticipantId = (long)comboBox2.SelectedValue;
+                createChequesRequestDto.BankId = (long)comboBox4.SelectedValue;
+                createChequesRequestDto.NameOnCheque = textBox1.Text;
+
+                createChequesRequestDto.Cheques = new List<ChequeDto>();
+
+                foreach (var layoutpanel in pnlContainer.Controls)
+                {
+
+                    if (layoutpanel is FlowLayoutPanel)
                     {
-                        ChequeDto chequeDto = new ChequeDto();
-                        if (gb is GroupBox)
+                        var lPanel = layoutpanel as FlowLayoutPanel;
+                        foreach (var gb in lPanel.Controls)
                         {
-                            var lGroup = gb as GroupBox;
-                            foreach (var control in lGroup.Controls)
+                            ChequeDto chequeDto = new ChequeDto();
+                            if (gb is GroupBox)
                             {
-                                if (control is PictureBox)
+                                var lGroup = gb as GroupBox;
+                                foreach (var control in lGroup.Controls)
                                 {
-                                    var image = control as PictureBox;
-
-                                    using (MemoryStream ms = new MemoryStream())
+                                    if (control is PictureBox)
                                     {
-                                        image.Image.Save(ms, ImageFormat.Jpeg);
-                                        chequeDto.Image.ImageData = ms.ToArray();
-                                        chequeDto.Image.Extension = "Jpeg";
+                                        var image = control as PictureBox;
+
+                                        using (MemoryStream ms = new MemoryStream())
+                                        {
+                                            image.Image.Save(ms, ImageFormat.Jpeg);
+                                            chequeDto.Image = new ImageDto();
+                                            chequeDto.Image.ImageData = ms.ToArray();
+                                            chequeDto.Image.Extension = "Jpeg";
+                                        }
                                     }
-                                }
-                                if (control is TextBox)
-                                {
-                                    var c = control as TextBox;
-                                    switch (c.Name)
+                                    if (control is TextBox)
                                     {
-                                        case NumberTextBox:
-                                            {
-                                                if (!string.IsNullOrEmpty(c.Text))
+                                        var c = control as TextBox;
+                                        switch (c.Name)
+                                        {
+                                            case NumberTextBox:
                                                 {
-                                                    MessageBox.Show("One of the cheques is missing the account number");
-                                                    return null;
+                                                    if (string.IsNullOrEmpty(c.Text))
+                                                    {
+                                                        MessageBox.Show("One of the cheques is missing the account number");
+                                                        return null;
+                                                    }
+                                                    chequeDto.Number = c.Text;
+                                                    break;
                                                 }
-                                                chequeDto.Number = c.Text;
-                                                break;
-                                            }
+                                            case AmountTextBox:
+                                                {
+                                                    if (!decimal.TryParse(c.Text, out decimal amount))
+                                                    {
+                                                        MessageBox.Show("One of the cheques amount is missing or in invalid number");
+                                                        return null;
+                                                    }
+                                                    chequeDto.Amount = amount;
 
-                                        case DateTextBox:
-                                            {
-                                                if (!DateTime.TryParse(c.Text, out DateTime dueDate))
-                                                {
-                                                    MessageBox.Show("One of the cheques date is missing or in invalid date");
-                                                    return null;
+                                                    break;
                                                 }
-                                                chequeDto.DueDate = dueDate;
-                                                break;
-                                            }
-                                        case AmountTextBox:
-                                            {
-                                                if (decimal.TryParse(c.Text, out decimal amount))
-                                                {
-                                                    MessageBox.Show("One of the cheques amount is missing or in invalid number");
-                                                    return null;
-                                                }
-                                                chequeDto.Amount = amount;
-
-                                                break;
-                                            }
+                                        }
+                                    }
+                                    if (control is DateTimePicker)
+                                    {
+                                        var date = control as DateTimePicker;
+                                        if (!DateTime.TryParse(date.Text, out DateTime dueDate))
+                                        {
+                                            MessageBox.Show("One of the cheques date is missing or in invalid date");
+                                            return null;
+                                        }
+                                        chequeDto.DueDate = dueDate;
                                     }
                                 }
                             }
-                        }
 
-                        createChequesRequestDto.Cheques.Add(chequeDto);
+                            createChequesRequestDto.Cheques.Add(chequeDto);
+                        }
                     }
                 }
-            }
 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("an error happened try again later");
+                return null;
+            }
             return createChequesRequestDto;
         }
 
@@ -729,9 +734,8 @@ namespace SimpleScan
             try
             {
                 // Replace with your actual API endpoint
-                // var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
-                var baseUrl = "http://localhost:5049/v1";
-                baseUrl = baseUrl + "/lookups/customers";
+                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+                baseUrl = baseUrl + "/v1/user/createCheques";
                 string apiUrl = $"{baseUrl}";
 
 
@@ -794,7 +798,7 @@ namespace SimpleScan
             catch (Exception ex)
             {
                 // Handle API errors (e.g., network issues, invalid response, etc.)
-                MessageBox.Show($"Error fetching suggestions: {ex.Message}");
+                MessageBox.Show($"Error fetching customers");
                 return null;
             }
         }
@@ -807,11 +811,14 @@ namespace SimpleScan
                 var suggestions = await GetCustomersApiCallAsync(userInput);
                 if (suggestions != null && suggestions.Any())
                 {
-                    comboBox2.Items.AddRange(suggestions.ToArray());
+                    comboBox2.DataSource = suggestions.ToArray();
                 }
 
                 var banks = await GetBanksAPiCall();
-                comboBox4.Items.AddRange(banks.ToArray());
+                if (banks != null && banks.Any())
+                {
+                    comboBox4.DataSource = banks.ToArray();
+                }
             }
         }
 
@@ -821,9 +828,9 @@ namespace SimpleScan
             try
             {
                 // Replace with your actual API endpoint
-                // var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
-                var baseUrl = "http://localhost:5049/v1";
-                baseUrl = baseUrl + "/lookups/customers";
+                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+                //var baseUrl = "http://localhost:5049/v1";
+                baseUrl = baseUrl + "/v1/lookups/banks";
                 string apiUrl = $"{baseUrl}";
 
                 // Send the API request and get the response
