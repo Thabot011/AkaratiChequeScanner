@@ -90,10 +90,10 @@ namespace SimpleScan
             {
                 bProbed = b;
 
-                foreach (Control ctrl in listRegistered)
-                {
-                    ctrl.Enabled = b;
-                }
+                //foreach (Control ctrl in listRegistered)
+                //{
+                //    ctrl.Enabled = b;
+                //}
 
                 return bProbed;
             }
@@ -450,8 +450,8 @@ namespace SimpleScan
 
             if (itemsToShow <= 0) return;
 
-            var pageImages = new Bitmap[itemsToShow];
-            Array.Copy(Images.ToArray(), startIndex, pageImages, 0, itemsToShow);
+            var pageImages = new Bitmap[Images.Count];
+            Array.Copy(Images.ToArray(), pageImages, Images.Count);
 
             DisplayTwoColumnImages(pageImages);
         }
@@ -531,12 +531,12 @@ namespace SimpleScan
             NumbertxtBox.Top = pb.Bottom + spacing;
             AddPlaceholder(NumbertxtBox, "Number");
 
-            TextBox DatetxtBox = new TextBox();
-            DatetxtBox.Name = "Date";
-            DatetxtBox.Width = textBoxWidth;
-            DatetxtBox.Left = pb.Left + 1 * (textBoxWidth + spacing);
-            DatetxtBox.Top = pb.Bottom + spacing;
-            AddPlaceholder(DatetxtBox, "Date");
+            DateTimePicker datePicker = new DateTimePicker();
+            datePicker.Name = "Date";
+            datePicker.Width = textBoxWidth;
+            datePicker.Left = pb.Left + 1 * (textBoxWidth + spacing);
+            datePicker.Top = pb.Bottom + spacing;
+            //AddPlaceholder(datePicker, "Date");
 
 
             TextBox AmounttxtBox = new TextBox();
@@ -546,7 +546,7 @@ namespace SimpleScan
             AmounttxtBox.Top = pb.Bottom + spacing;
             AddPlaceholder(AmounttxtBox, "Amount");
 
-            groupBox.Controls.AddRange(new Control[] { NumbertxtBox, DatetxtBox, AmounttxtBox });
+            groupBox.Controls.AddRange(new Control[] { NumbertxtBox, datePicker, AmounttxtBox });
         }
 
         private void AddPlaceholder(TextBox textBox, string placeholder)
@@ -635,7 +635,7 @@ namespace SimpleScan
                 return null;
             }
 
-            if(string.IsNullOrEmpty(textBox1.Text))
+            if (string.IsNullOrEmpty(textBox1.Text))
             {
                 MessageBox.Show("name on cheque is required");
                 return null;
@@ -643,7 +643,7 @@ namespace SimpleScan
 
             CreateChequesRequestDto createChequesRequestDto = new CreateChequesRequestDto();
 
-            createChequesRequestDto.CustomerParticipantId = (long)comboBox1.SelectedValue;
+            createChequesRequestDto.CustomerParticipantId = (long)comboBox2.SelectedValue;
             createChequesRequestDto.BankId = (long)comboBox4.SelectedValue;
             createChequesRequestDto.NameOnCheque = textBox1.Text;
 
@@ -670,6 +670,7 @@ namespace SimpleScan
                                     using (MemoryStream ms = new MemoryStream())
                                     {
                                         image.Image.Save(ms, ImageFormat.Jpeg);
+                                        chequeDto.Image = new ImageDto();
                                         chequeDto.Image.ImageData = ms.ToArray();
                                         chequeDto.Image.Extension = "Jpeg";
                                     }
@@ -681,7 +682,7 @@ namespace SimpleScan
                                     {
                                         case NumberTextBox:
                                             {
-                                                if (!string.IsNullOrEmpty(c.Text))
+                                                if (string.IsNullOrEmpty(c.Text))
                                                 {
                                                     MessageBox.Show("One of the cheques is missing the account number");
                                                     return null;
@@ -702,7 +703,7 @@ namespace SimpleScan
                                             }
                                         case AmountTextBox:
                                             {
-                                                if (decimal.TryParse(c.Text, out decimal amount))
+                                                if (!decimal.TryParse(c.Text, out decimal amount))
                                                 {
                                                     MessageBox.Show("One of the cheques amount is missing or in invalid number");
                                                     return null;
@@ -729,9 +730,8 @@ namespace SimpleScan
             try
             {
                 // Replace with your actual API endpoint
-                // var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
-                var baseUrl = "http://localhost:5049/v1";
-                baseUrl = baseUrl + "/lookups/customers";
+                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+                baseUrl = baseUrl + "/v1/user/createCheques";
                 string apiUrl = $"{baseUrl}";
 
 
@@ -807,11 +807,11 @@ namespace SimpleScan
                 var suggestions = await GetCustomersApiCallAsync(userInput);
                 if (suggestions != null && suggestions.Any())
                 {
-                    comboBox2.Items.AddRange(suggestions.ToArray());
+                    comboBox2.DataSource = suggestions.ToArray();
                 }
 
                 var banks = await GetBanksAPiCall();
-                comboBox4.Items.AddRange(banks.ToArray());
+                comboBox4.DataSource = banks.ToArray();
             }
         }
 
@@ -821,9 +821,9 @@ namespace SimpleScan
             try
             {
                 // Replace with your actual API endpoint
-                // var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
-                var baseUrl = "http://localhost:5049/v1";
-                baseUrl = baseUrl + "/lookups/customers";
+                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+                //var baseUrl = "http://localhost:5049/v1";
+                baseUrl = baseUrl + "/v1/lookups/banks";
                 string apiUrl = $"{baseUrl}";
 
                 // Send the API request and get the response
