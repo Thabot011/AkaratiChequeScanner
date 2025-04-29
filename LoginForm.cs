@@ -51,14 +51,14 @@ namespace AkaratiCheckScanner
             try
             {
                 // Replace with your actual API endpoint
-                var baseUrl = ConfigurationManager.AppSettings["LoginBaseUrl"];
-                string apiUrl = $"{baseUrl}v1/token";
+                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+                string apiUrl = $"{baseUrl}/v1/token";
 
                 var data = new
                 {
                     username,
                     password,
-                    identifier = "mL5WislMnggrmNaw4/h3pg=="
+                    identifier = "KS6YL+e8wNw3VFhRXx7ssQ=="
                 };
 
                 string jsonData = JsonConvert.SerializeObject(data);

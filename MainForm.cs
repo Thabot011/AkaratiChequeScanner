@@ -45,16 +45,22 @@ namespace SimpleScan
         }
 
 
-        protected override void OnLoad(EventArgs e)
+        protected override async void OnLoad(EventArgs e)
         {
-            string imageFolder = @"./Output"; // Update this to your folder path
-            string[] imageFiles = Directory.GetFiles(imageFolder, "*.jpeg"); // Or *.png, etc.
-            foreach (string file in imageFiles)
-            {
-                Images.Add(Image.FromFile(file));
-            }
+            //string imageFolder = @"./Output"; // Update this to your folder path
+            //string[] imageFiles = Directory.GetFiles(imageFolder, "*.jpeg"); // Or *.png, etc.
+            //foreach (string file in imageFiles)
+            //{
+            //    Images.Add(Image.FromFile(file));
+            //}
 
-            LoadImagesWithPagination();
+            //LoadImagesWithPagination();
+
+            var banks = await GetBanksAPiCall();
+            if (banks != null && banks.Any())
+            {
+                comboBox4.DataSource = banks.ToArray();
+            }
             base.OnLoad(e);
         }
 
@@ -89,10 +95,10 @@ namespace SimpleScan
             {
                 bProbed = b;
 
-                //foreach (Control ctrl in listRegistered)
-                //{
-                //    ctrl.Enabled = b;
-                //}
+                foreach (Control ctrl in listRegistered)
+                {
+                    ctrl.Enabled = b;
+                }
 
                 return bProbed;
             }
@@ -623,13 +629,13 @@ namespace SimpleScan
 
             try
             {
-                if (comboBox2.SelectedValue == null || long.TryParse(comboBox2.SelectedValue?.ToString(), out var _))
+                if (comboBox2.SelectedValue == null || !long.TryParse(comboBox2.SelectedValue?.ToString(), out var _))
                 {
                     MessageBox.Show("Please select a customer");
                     return null;
                 }
 
-                if (comboBox4.SelectedValue == null || long.TryParse(comboBox4.SelectedValue?.ToString(), out var _))
+                if (comboBox4.SelectedValue == null || !long.TryParse(comboBox4.SelectedValue?.ToString(), out var _))
                 {
                     MessageBox.Show("Please select a bank");
                     return null;
@@ -811,14 +817,7 @@ namespace SimpleScan
                 var suggestions = await GetCustomersApiCallAsync(userInput);
                 if (suggestions != null && suggestions.Any())
                 {
-                    comboBox2.Items.Clear();
-                    comboBox2.Items.AddRange(suggestions.ToArray());
-                }
-
-                var banks = await GetBanksAPiCall();
-                if (banks != null && banks.Any())
-                {
-                    comboBox4.DataSource = banks.ToArray();
+                    comboBox2.DataSource = suggestions.ToArray();
                 }
             }
         }
