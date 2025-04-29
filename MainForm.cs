@@ -623,13 +623,13 @@ namespace SimpleScan
 
             try
             {
-                if (comboBox2.SelectedValue == null && long.TryParse(comboBox2.SelectedValue.ToString(), out var _))
+                if (comboBox2.SelectedValue == null || long.TryParse(comboBox2.SelectedValue?.ToString(), out var _))
                 {
                     MessageBox.Show("Please select a customer");
                     return null;
                 }
 
-                if (comboBox4.SelectedValue == null && long.TryParse(comboBox4.SelectedValue.ToString(), out var _))
+                if (comboBox4.SelectedValue == null || long.TryParse(comboBox4.SelectedValue?.ToString(), out var _))
                 {
                     MessageBox.Show("Please select a bank");
                     return null;
@@ -811,7 +811,8 @@ namespace SimpleScan
                 var suggestions = await GetCustomersApiCallAsync(userInput);
                 if (suggestions != null && suggestions.Any())
                 {
-                    comboBox2.DataSource = suggestions.ToArray();
+                    comboBox2.Items.Clear();
+                    comboBox2.Items.AddRange(suggestions.ToArray());
                 }
 
                 var banks = await GetBanksAPiCall();

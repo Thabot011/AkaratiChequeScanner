@@ -215,6 +215,7 @@
             // 
             this.comboBox2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.comboBox2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBox2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBox2.DisplayMember = "name";
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(116, 75);
@@ -278,7 +279,7 @@
             // 
             this.btnSetting.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnSetting.Location = new System.Drawing.Point(133, 15);
-            this.btnSetting.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSetting.Margin = new System.Windows.Forms.Padding(4);
             this.btnSetting.Name = "btnSetting";
             this.btnSetting.Size = new System.Drawing.Size(100, 31);
             this.btnSetting.TabIndex = 27;
@@ -291,7 +292,7 @@
             this.btnScanAll.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnScanAll.Enabled = false;
             this.btnScanAll.Location = new System.Drawing.Point(819, 15);
-            this.btnScanAll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnScanAll.Margin = new System.Windows.Forms.Padding(4);
             this.btnScanAll.Name = "btnScanAll";
             this.btnScanAll.Size = new System.Drawing.Size(100, 31);
             this.btnScanAll.TabIndex = 26;
@@ -303,7 +304,7 @@
             // 
             this.btnConfirm.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnConfirm.Location = new System.Drawing.Point(927, 14);
-            this.btnConfirm.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnConfirm.Margin = new System.Windows.Forms.Padding(4);
             this.btnConfirm.Name = "btnConfirm";
             this.btnConfirm.Size = new System.Drawing.Size(155, 31);
             this.btnConfirm.TabIndex = 25;
@@ -315,7 +316,7 @@
             // 
             this.button1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.button1.Location = new System.Drawing.Point(16, 14);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 31);
             this.button1.TabIndex = 24;
@@ -343,7 +344,7 @@
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1111, 674);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.Text = "Akarati Cheque Scanner";
             this.tableLayoutPanel1.ResumeLayout(false);
