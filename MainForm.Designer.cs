@@ -1,7 +1,7 @@
 ﻿namespace SimpleScan
 {
-	partial class MainForm
-	{
+    partial class MainForm
+    {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -12,12 +12,12 @@
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
-		{
-			if (disposing && (components != null))
-			{
-				components.Dispose();
-			}
-			base.Dispose(disposing);
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
@@ -27,7 +27,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
 		private void InitializeComponent()
-		{
+        {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnNext = new System.Windows.Forms.Button();
@@ -143,6 +143,7 @@
             // 
             // label8
             // 
+            this.label8.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(600, 78);
             this.label8.Name = "label8";
@@ -152,6 +153,7 @@
             // 
             // comboBox4
             // 
+            this.comboBox4.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.comboBox4.DisplayMember = "Name";
             this.comboBox4.FormattingEnabled = true;
             this.comboBox4.Location = new System.Drawing.Point(651, 75);
@@ -225,7 +227,7 @@
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(809, 79);
+            this.label4.Location = new System.Drawing.Point(817, 80);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(103, 16);
@@ -269,7 +271,7 @@
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(304, 79);
+            this.label3.Location = new System.Drawing.Point(361, 83);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(114, 16);
@@ -290,7 +292,7 @@
             // textBox1
             // 
             this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.textBox1.Location = new System.Drawing.Point(422, 75);
+            this.textBox1.Location = new System.Drawing.Point(489, 77);
             this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(153, 22);
@@ -310,7 +312,7 @@
             // btnSetting
             // 
             this.btnSetting.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnSetting.Location = new System.Drawing.Point(135, 15);
+            this.btnSetting.Location = new System.Drawing.Point(135, 13);
             this.btnSetting.Margin = new System.Windows.Forms.Padding(4);
             this.btnSetting.Name = "btnSetting";
             this.btnSetting.Size = new System.Drawing.Size(100, 31);
@@ -335,7 +337,6 @@
             // btnConfirm
             // 
             this.btnConfirm.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnConfirm.Enabled = false;
             this.btnConfirm.Location = new System.Drawing.Point(928, 13);
             this.btnConfirm.Margin = new System.Windows.Forms.Padding(4);
             this.btnConfirm.Name = "btnConfirm";
@@ -386,7 +387,7 @@
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
-		}
+        }
 
         #endregion
 
