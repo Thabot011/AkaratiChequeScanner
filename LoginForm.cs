@@ -21,17 +21,19 @@ namespace AkaratiCheckScanner
 
         private async void button1_Click(object sender, EventArgs e)
         {
+            this.Enabled = false;
             if (string.IsNullOrEmpty(textBox1.Text) || string.IsNullOrEmpty(textBox2.Text))
             {
                 MessageBox.Show("Missing user name or password");
+                ResetLoading();
                 return;
             }
 
             var token = await LoginApiAsync(textBox1.Text, textBox2.Text);
-
             if (string.IsNullOrEmpty(token))
             {
                 MessageBox.Show("Inavlid user name or password");
+                ResetLoading();
                 return;
             }
 
@@ -76,10 +78,16 @@ namespace AkaratiCheckScanner
 
             catch (Exception ex)
             {
-                // Handle API errors (e.g., network issues, invalid response, etc.)
-                MessageBox.Show($"Error fetching suggestions: {ex.Message}");
+                ResetLoading();
             }
             return token;
+        }
+
+
+        private void ResetLoading()
+        {
+            this.Enabled = true;
+            this.Visible = true;
         }
     }
 }

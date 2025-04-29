@@ -33,6 +33,8 @@
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -66,11 +68,11 @@
             this.tableLayoutPanel1.Controls.Add(this.pnlContainer, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.56358F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.43642F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 19.21769F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.78231F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 86F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1111, 675);
             this.tableLayoutPanel1.TabIndex = 24;
@@ -81,7 +83,7 @@
             this.panel2.Controls.Add(this.btnPrevious);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(2, 590);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1107, 83);
             this.panel2.TabIndex = 26;
@@ -90,7 +92,7 @@
             // 
             this.btnNext.Enabled = false;
             this.btnNext.Location = new System.Drawing.Point(535, 13);
-            this.btnNext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(4);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(155, 31);
             this.btnNext.TabIndex = 26;
@@ -102,7 +104,7 @@
             // 
             this.btnPrevious.Enabled = false;
             this.btnPrevious.Location = new System.Drawing.Point(375, 13);
-            this.btnPrevious.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnPrevious.Margin = new System.Windows.Forms.Padding(4);
             this.btnPrevious.Name = "btnPrevious";
             this.btnPrevious.Size = new System.Drawing.Size(142, 31);
             this.btnPrevious.TabIndex = 25;
@@ -112,6 +114,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.comboBox4);
             this.panel1.Controls.Add(this.comboBox3);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
@@ -132,17 +136,36 @@
             this.panel1.Controls.Add(this.button1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(2, 2);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1107, 111);
+            this.panel1.Size = new System.Drawing.Size(1107, 109);
             this.panel1.TabIndex = 2;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(600, 78);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(45, 16);
+            this.label8.TabIndex = 43;
+            this.label8.Text = "Banks";
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.DisplayMember = "Name";
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Location = new System.Drawing.Point(651, 75);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(141, 24);
+            this.comboBox4.TabIndex = 42;
+            this.comboBox4.ValueMember = "Id";
             // 
             // comboBox3
             // 
             this.comboBox3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.comboBox3.FormattingEnabled = true;
             this.comboBox3.Location = new System.Drawing.Point(1019, 111);
-            this.comboBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBox3.Margin = new System.Windows.Forms.Padding(2);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(72, 24);
             this.comboBox3.TabIndex = 41;
@@ -173,7 +196,7 @@
             // 
             this.textBox4.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.textBox4.Location = new System.Drawing.Point(853, 111);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox4.Margin = new System.Windows.Forms.Padding(2);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(93, 22);
             this.textBox4.TabIndex = 38;
@@ -193,7 +216,7 @@
             // 
             this.textBox3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.textBox3.Location = new System.Drawing.Point(535, 111);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(2);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(156, 22);
             this.textBox3.TabIndex = 36;
@@ -212,8 +235,8 @@
             // textBox2
             // 
             this.textBox2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.textBox2.Location = new System.Drawing.Point(935, 77);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox2.Location = new System.Drawing.Point(935, 75);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(2);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(156, 22);
             this.textBox2.TabIndex = 34;
@@ -222,20 +245,22 @@
             // 
             this.comboBox2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.comboBox2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBox2.DisplayMember = "name";
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(145, 77);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBox2.Location = new System.Drawing.Point(117, 75);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(2);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(239, 24);
+            this.comboBox2.Size = new System.Drawing.Size(164, 24);
             this.comboBox2.TabIndex = 33;
-            this.comboBox2.TextChanged += new System.EventHandler(this.comboBox2_TextChanged);
+            this.comboBox2.ValueMember = "Id";
+            this.comboBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBox2_KeyUpAsync);
             // 
             // comboBox1
             // 
             this.comboBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(145, 111);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(239, 24);
             this.comboBox1.TabIndex = 32;
@@ -244,7 +269,7 @@
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(409, 79);
+            this.label3.Location = new System.Drawing.Point(304, 79);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(114, 16);
@@ -265,17 +290,17 @@
             // textBox1
             // 
             this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.textBox1.Location = new System.Drawing.Point(535, 77);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Location = new System.Drawing.Point(422, 75);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(238, 22);
+            this.textBox1.Size = new System.Drawing.Size(153, 22);
             this.textBox1.TabIndex = 29;
             // 
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 79);
+            this.label1.Location = new System.Drawing.Point(9, 80);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(104, 16);
@@ -286,7 +311,7 @@
             // 
             this.btnSetting.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnSetting.Location = new System.Drawing.Point(135, 15);
-            this.btnSetting.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSetting.Margin = new System.Windows.Forms.Padding(4);
             this.btnSetting.Name = "btnSetting";
             this.btnSetting.Size = new System.Drawing.Size(100, 31);
             this.btnSetting.TabIndex = 27;
@@ -299,7 +324,7 @@
             this.btnScanAll.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnScanAll.Enabled = false;
             this.btnScanAll.Location = new System.Drawing.Point(820, 15);
-            this.btnScanAll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnScanAll.Margin = new System.Windows.Forms.Padding(4);
             this.btnScanAll.Name = "btnScanAll";
             this.btnScanAll.Size = new System.Drawing.Size(100, 31);
             this.btnScanAll.TabIndex = 26;
@@ -312,7 +337,7 @@
             this.btnConfirm.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnConfirm.Enabled = false;
             this.btnConfirm.Location = new System.Drawing.Point(928, 13);
-            this.btnConfirm.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnConfirm.Margin = new System.Windows.Forms.Padding(4);
             this.btnConfirm.Name = "btnConfirm";
             this.btnConfirm.Size = new System.Drawing.Size(155, 31);
             this.btnConfirm.TabIndex = 25;
@@ -324,7 +349,7 @@
             // 
             this.button1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.button1.Location = new System.Drawing.Point(17, 13);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 31);
             this.button1.TabIndex = 24;
@@ -338,11 +363,12 @@
             this.pnlContainer.BackColor = System.Drawing.Color.White;
             this.pnlContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlContainer.Location = new System.Drawing.Point(2, 117);
-            this.pnlContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlContainer.Location = new System.Drawing.Point(2, 115);
+            this.pnlContainer.Margin = new System.Windows.Forms.Padding(2);
             this.pnlContainer.Name = "pnlContainer";
-            this.pnlContainer.Size = new System.Drawing.Size(1107, 469);
+            this.pnlContainer.Size = new System.Drawing.Size(1107, 471);
             this.pnlContainer.TabIndex = 6;
+            this.pnlContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlContainer_Paint);
             // 
             // MainForm
             // 
@@ -351,7 +377,7 @@
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1111, 675);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.Text = "Akarati Cheque Scanner";
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -388,6 +414,8 @@
         private System.Windows.Forms.Button btnScanAll;
         private System.Windows.Forms.Button btnConfirm;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.Label label8;
     }
 }
 

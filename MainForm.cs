@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using AkaratiCheckScanner;
 using Newtonsoft.Json;
 using ScanCRNet;
 using ScanCRNet.Utility;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using Image = System.Drawing.Image;
 
 namespace SimpleScan
@@ -594,7 +596,7 @@ namespace SimpleScan
             }
         }
 
-        private void btnConfirm_Click(object sender, EventArgs e)
+        private async void btnConfirm_Click(object sender, EventArgs e)
         {
             foreach (Image image in Images)
             {
@@ -606,18 +608,44 @@ namespace SimpleScan
                 image.Save(Path.Combine("Output", fileName), System.Drawing.Imaging.ImageFormat.Jpeg);
             }
 
-          var createChequeModel =  GetChequeModel();
+            var createChequeModel = GetChequeModel();
 
-            CallAddChequeAPI();
+            if (createChequeModel == null)
+            {
+                return;
+            }
+
+            await CallAddChequeAPIAsync(createChequeModel);
+            MessageBox.Show("Cheque request is created successfully");
         }
 
 
 
         private CreateChequesRequestDto GetChequeModel()
         {
+            if (comboBox2.SelectedValue == null)
+            {
+                MessageBox.Show("Please select a customer");
+                return null;
+            }
+
+            if (comboBox4.SelectedValue == null)
+            {
+                MessageBox.Show("Please select a bank");
+                return null;
+            }
+
+            if(string.IsNullOrEmpty(textBox1.Text))
+            {
+                MessageBox.Show("name on cheque is required");
+                return null;
+            }
+
             CreateChequesRequestDto createChequesRequestDto = new CreateChequesRequestDto();
 
-            createChequesRequestDto.CustomerParticipantId = comboBox1.SelectedIndex;
+            createChequesRequestDto.CustomerParticipantId = (long)comboBox1.SelectedValue;
+            createChequesRequestDto.BankId = (long)comboBox4.SelectedValue;
+            createChequesRequestDto.NameOnCheque = textBox1.Text;
 
             createChequesRequestDto.Cheques = new List<ChequeDto>();
 
@@ -653,20 +681,34 @@ namespace SimpleScan
                                     {
                                         case NumberTextBox:
                                             {
+                                                if (!string.IsNullOrEmpty(c.Text))
+                                                {
+                                                    MessageBox.Show("One of the cheques is missing the account number");
+                                                    return null;
+                                                }
                                                 chequeDto.Number = c.Text;
                                                 break;
                                             }
 
                                         case DateTextBox:
                                             {
-                                                DateTime.TryParse(c.Text, out DateTime dueDate);
+                                                if (!DateTime.TryParse(c.Text, out DateTime dueDate))
+                                                {
+                                                    MessageBox.Show("One of the cheques date is missing or in invalid date");
+                                                    return null;
+                                                }
                                                 chequeDto.DueDate = dueDate;
                                                 break;
                                             }
                                         case AmountTextBox:
                                             {
-                                                decimal.TryParse(c.Text, out decimal amount);
+                                                if (decimal.TryParse(c.Text, out decimal amount))
+                                                {
+                                                    MessageBox.Show("One of the cheques amount is missing or in invalid number");
+                                                    return null;
+                                                }
                                                 chequeDto.Amount = amount;
+
                                                 break;
                                             }
                                     }
@@ -682,39 +724,59 @@ namespace SimpleScan
             return createChequesRequestDto;
         }
 
-        private void CallAddChequeAPI()
+        private async Task CallAddChequeAPIAsync(CreateChequesRequestDto createChequesRequestDto)
         {
-
-        }
-
-        private async void comboBox2_TextChanged(object sender, EventArgs e)
-        {
-            string userInput = comboBox2.Text;
-            if (userInput.Length > 2)
-            {
-                var suggestions = await GetCustomersApiCallAsync(userInput);
-                AutoCompleteStringCollection autoCompleteData = new AutoCompleteStringCollection();
-                foreach (var suggestion in suggestions)
-                {
-                    autoCompleteData.Insert(suggestion.Key, suggestion.Value);
-                }
-                comboBox2.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-
-            }
-        }
-
-        private async Task<Dictionary<int, string>> GetCustomersApiCallAsync(string searchTerm)
-        {
-            Dictionary<int, string> suggestions = new Dictionary<int, string>();
             try
             {
                 // Replace with your actual API endpoint
-                var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
+                // var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
+                var baseUrl = "http://localhost:5049/v1";
+                baseUrl = baseUrl + "/lookups/customers";
+                string apiUrl = $"{baseUrl}";
+
+
+
+
+                string jsonData = JsonConvert.SerializeObject(createChequesRequestDto);
+                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                // Send the API request and get the response
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {GlobalSetting.AuthToken}");
+                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                    response.EnsureSuccessStatusCode();  // Throws an exception if the status code is not successful
+
+                    // Read the API response
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                // Handle API errors (e.g., network issues, invalid response, etc.)
+                MessageBox.Show($"Error creating cheque");
+            }
+        }
+
+
+        private async Task<List<LookupItem>> GetCustomersApiCallAsync(string searchTerm)
+        {
+            try
+            {
+                // Replace with your actual API endpoint
+                // var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
+                var baseUrl = "http://localhost:5049/v1";
+                baseUrl = baseUrl + "/lookups/customers";
                 string apiUrl = $"{baseUrl}/{searchTerm}";
 
                 // Send the API request and get the response
                 using (HttpClient client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {GlobalSetting.AuthToken}");
                     HttpResponseMessage response = await client.GetAsync(apiUrl);
                     response.EnsureSuccessStatusCode();  // Throws an exception if the status code is not successful
 
@@ -722,7 +784,8 @@ namespace SimpleScan
                     string responseContent = await response.Content.ReadAsStringAsync();
 
                     // Parse the API response (Assuming JSON in this case)
-                    suggestions = JsonConvert.DeserializeObject<Dictionary<int, string>>(responseContent);
+                    var suggestions = JsonConvert.DeserializeObject<List<LookupItem>>(responseContent);
+                    return suggestions;
 
                 }
 
@@ -732,8 +795,75 @@ namespace SimpleScan
             {
                 // Handle API errors (e.g., network issues, invalid response, etc.)
                 MessageBox.Show($"Error fetching suggestions: {ex.Message}");
+                return null;
             }
-            return suggestions;
+        }
+
+        private async void comboBox2_KeyUpAsync(object sender, KeyEventArgs e)
+        {
+            string userInput = comboBox2.Text;
+            if (userInput.Length > 2)
+            {
+                var suggestions = await GetCustomersApiCallAsync(userInput);
+                if (suggestions != null && suggestions.Any())
+                {
+                    comboBox2.Items.AddRange(suggestions.ToArray());
+                }
+
+                var banks = await GetBanksAPiCall();
+                comboBox4.Items.AddRange(banks.ToArray());
+            }
+        }
+
+
+        private async Task<List<LookupItem>> GetBanksAPiCall()
+        {
+            try
+            {
+                // Replace with your actual API endpoint
+                // var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
+                var baseUrl = "http://localhost:5049/v1";
+                baseUrl = baseUrl + "/lookups/customers";
+                string apiUrl = $"{baseUrl}";
+
+                // Send the API request and get the response
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {GlobalSetting.AuthToken}");
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+                    response.EnsureSuccessStatusCode();  // Throws an exception if the status code is not successful
+
+                    // Read the API response
+                    string responseContent = await response.Content.ReadAsStringAsync();
+
+                    // Parse the API response (Assuming JSON in this case)
+                    var suggestions = JsonConvert.DeserializeObject<List<LookupItem>>(responseContent);
+                    return suggestions;
+
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                // Handle API errors (e.g., network issues, invalid response, etc.)
+                MessageBox.Show($"Error fetching suggestions: {ex.Message}");
+                return null;
+            }
+        }
+
+
+        private void pnlContainer_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
+
+    public class LookupItem
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+    };
+
 }
