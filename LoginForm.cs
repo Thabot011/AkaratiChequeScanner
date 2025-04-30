@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AkaratiCheckScanner.Service;
+using Newtonsoft.Json;
 using SimpleScan;
 using System;
 using System.Collections.Generic;
@@ -50,30 +51,16 @@ namespace AkaratiCheckScanner
             string token = string.Empty;
             try
             {
-                // Replace with your actual API endpoint
-                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
-                string apiUrl = $"{baseUrl}/v1/token";
 
+                HttpclientService httpclientService = new HttpclientService();
+                var url = "/v1/token";
                 var data = new
                 {
                     username,
                     password,
                     identifier = "KS6YL+e8wNw3VFhRXx7ssQ=="
                 };
-
-                string jsonData = JsonConvert.SerializeObject(data);
-                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-                // Send the API request and get the response
-                using (HttpClient client = new HttpClient())
-                {
-                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-                    response.EnsureSuccessStatusCode();  // Throws an exception if the status code is not successful
-
-                    // Read the API response
-                    token = await response.Content.ReadAsStringAsync();
-                }
-
+                token = await httpclientService.Post(url, data);
             }
 
             catch (Exception ex)

@@ -15,7 +15,7 @@ namespace AkaratiCheckScanner.Service
         private readonly HttpClient _httpClient;
         public HttpclientService()
         {
-            var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
+            var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(baseUrl);
         }
@@ -37,7 +37,7 @@ namespace AkaratiCheckScanner.Service
         }
 
 
-        public async Task Post(string url, object body)
+        public async Task<string> Post(string url, object body)
         {
             string jsonData = JsonConvert.SerializeObject(body);
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -48,6 +48,7 @@ namespace AkaratiCheckScanner.Service
 
             // Read the API response
             string responseContent = await response.Content.ReadAsStringAsync();
+            return responseContent;
         }
 
     }
