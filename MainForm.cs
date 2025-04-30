@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
@@ -11,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AkaratiCheckScanner;
+using AkaratiCheckScanner.Model;
+using AkaratiCheckScanner.Service;
 using Newtonsoft.Json;
 using ScanCRNet;
 using ScanCRNet.Utility;
@@ -733,29 +734,10 @@ namespace SimpleScan
         {
             try
             {
-                // Replace with your actual API endpoint
-                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
-                baseUrl = baseUrl + "/v1/user/createCheques";
-                string apiUrl = $"{baseUrl}";
 
-
-
-
-                string jsonData = JsonConvert.SerializeObject(createChequesRequestDto);
-                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-                // Send the API request and get the response
-                using (HttpClient client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add("Accept", "application/json");
-                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {GlobalSetting.AuthToken}");
-                    HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-                    response.EnsureSuccessStatusCode();  // Throws an exception if the status code is not successful
-
-                    // Read the API response
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                }
-
+                HttpclientService httpclientService = new HttpclientService();
+                string url = "/v1/user/createCheques";
+                await httpclientService.Post(url, createChequesRequestDto);
             }
 
             catch (Exception ex)
@@ -770,29 +752,11 @@ namespace SimpleScan
         {
             try
             {
-                // Replace with your actual API endpoint
-                // var baseUrl = ConfigurationManager.AppSettings["ApiUrl"];
-                var baseUrl = "http://localhost:5049/v1";
-                baseUrl = baseUrl + "/lookups/customers";
-                string apiUrl = $"{baseUrl}/{searchTerm}";
 
-                // Send the API request and get the response
-                using (HttpClient client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add("Accept", "application/json");
-                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {GlobalSetting.AuthToken}");
-                    HttpResponseMessage response = await client.GetAsync(apiUrl);
-                    response.EnsureSuccessStatusCode();  // Throws an exception if the status code is not successful
 
-                    // Read the API response
-                    string responseContent = await response.Content.ReadAsStringAsync();
-
-                    // Parse the API response (Assuming JSON in this case)
-                    var suggestions = JsonConvert.DeserializeObject<List<LookupItem>>(responseContent);
-                    return suggestions;
-
-                }
-
+                HttpclientService httpsclientService = new HttpclientService();
+                string url = $"/lookups/customers/{searchTerm}";
+                return await httpsclientService.Get<List<LookupItem>>(url);
             }
 
             catch (Exception ex)
@@ -828,29 +792,10 @@ namespace SimpleScan
         {
             try
             {
-                // Replace with your actual API endpoint
-                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
-                //var baseUrl = "http://localhost:5049/v1";
-                baseUrl = baseUrl + "/v1/lookups/banks";
-                string apiUrl = $"{baseUrl}";
 
-                // Send the API request and get the response
-                using (HttpClient client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add("Accept", "application/json");
-                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {GlobalSetting.AuthToken}");
-                    HttpResponseMessage response = await client.GetAsync(apiUrl);
-                    response.EnsureSuccessStatusCode();  // Throws an exception if the status code is not successful
-
-                    // Read the API response
-                    string responseContent = await response.Content.ReadAsStringAsync();
-
-                    // Parse the API response (Assuming JSON in this case)
-                    var suggestions = JsonConvert.DeserializeObject<List<LookupItem>>(responseContent);
-                    return suggestions;
-
-                }
-
+                HttpclientService httpsclientService = new HttpclientService();
+                string url = "/v1/lookups/banks";
+                return await httpsclientService.Get<List<LookupItem>>(url);
             }
 
             catch (Exception ex)
@@ -867,11 +812,4 @@ namespace SimpleScan
 
         }
     }
-
-    public class LookupItem
-    {
-        public long Id { get; set; }
-        public string Name { get; set; }
-    };
-
 }
