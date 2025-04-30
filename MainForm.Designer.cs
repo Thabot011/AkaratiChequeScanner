@@ -214,7 +214,7 @@
             // comboBox2
             // 
             this.comboBox2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.comboBox2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBox2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.comboBox2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBox2.DisplayMember = "name";
             this.comboBox2.FormattingEnabled = true;
@@ -303,6 +303,7 @@
             // btnConfirm
             // 
             this.btnConfirm.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnConfirm.Enabled = false;
             this.btnConfirm.Location = new System.Drawing.Point(927, 14);
             this.btnConfirm.Margin = new System.Windows.Forms.Padding(4);
             this.btnConfirm.Name = "btnConfirm";

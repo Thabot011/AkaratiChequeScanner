@@ -35,21 +35,21 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.loginPanel = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.loginPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(266, 3);
+            this.textBox1.Location = new System.Drawing.Point(272, 6);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(257, 22);
             this.textBox1.TabIndex = 0;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(266, 31);
+            this.textBox2.Location = new System.Drawing.Point(272, 37);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(257, 22);
             this.textBox2.TabIndex = 1;
@@ -67,7 +67,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Location = new System.Drawing.Point(6, 3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(76, 16);
             this.label1.TabIndex = 3;
@@ -76,7 +76,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 28);
+            this.label2.Location = new System.Drawing.Point(6, 34);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(67, 16);
             this.label2.TabIndex = 4;
@@ -87,6 +87,7 @@
             this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.Window;
+            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble;
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -99,32 +100,32 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(526, 56);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(535, 65);
             this.tableLayoutPanel1.TabIndex = 5;
             // 
-            // panel1
+            // loginPanel
             // 
-            this.panel1.AutoSize = true;
-            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Location = new System.Drawing.Point(287, 153);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(532, 387);
-            this.panel1.TabIndex = 6;
+            this.loginPanel.AutoSize = true;
+            this.loginPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.loginPanel.BackColor = System.Drawing.Color.Transparent;
+            this.loginPanel.Controls.Add(this.button1);
+            this.loginPanel.Controls.Add(this.tableLayoutPanel1);
+            this.loginPanel.Location = new System.Drawing.Point(427, 115);
+            this.loginPanel.Name = "loginPanel";
+            this.loginPanel.Size = new System.Drawing.Size(541, 387);
+            this.loginPanel.TabIndex = 6;
             // 
             // LoginForm
             // 
             this.AutoSize = true;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1326, 705);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.loginPanel);
             this.Name = "LoginForm";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.loginPanel.ResumeLayout(false);
+            this.loginPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -138,6 +139,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel loginPanel;
     }
 }
