@@ -73,13 +73,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChequeDto.cs" />
-    <Compile Include="CreateChequesRequestDto.cs" />
+    <Compile Include="Model\ChequeDto.cs" />
+    <Compile Include="Model\CreateChequesRequestDto.cs" />
     <Compile Include="GlobalSetting.cs" />
-    <Compile Include="ImageDto.cs" />
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Model\ImageDto.cs" />
+    <Compile Include="Model\LookupItem.cs" />
     <Compile Include="Forms\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
@@ -89,7 +90,6 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Models.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ApiService.cs" />
@@ -98,6 +98,7 @@
     <EmbeddedResource Include="Forms\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Include="Service\HttpclientService.cs" />
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>

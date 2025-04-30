@@ -1,6 +1,7 @@
 ﻿using AkaratiCheckScanner;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Windows.Forms;
 
 namespace SimpleScan
@@ -10,6 +11,8 @@ namespace SimpleScan
         [STAThread]
         static void Main()
         {
+            GlobalSetting.BaseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new LoginForm());

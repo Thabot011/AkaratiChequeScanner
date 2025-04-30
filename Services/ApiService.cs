@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AkaratiCheckScanner.Model;
+using Newtonsoft.Json;
 using SimpleScan;
 using System;
 using System.Collections.Generic;
@@ -13,19 +14,35 @@ namespace AkaratiCheckScanner.Services
     public class ApiService
     {
         private readonly HttpClient _client;
-        private readonly string _baseUrl;
-
-        public ApiService(string baseUrl)
+        public ApiService()
         {
             _client = new HttpClient();
-            _baseUrl = baseUrl;
+            _client.BaseAddress = new Uri(GlobalSetting.BaseUrl);
+            _client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", GlobalSetting.AuthToken);
         }
 
         public async Task<List<LookupItem>> GetLookupItemsAsync(string searchTerm, string lookupType)
         {
             try
             {
-                var apiUrl = $"{_baseUrl}/lookups/{lookupType}/{searchTerm}";
+                var apiUrl = $"/v1/lookups/{lookupType}/{searchTerm}";
+                var response = await _client.GetAsync(apiUrl);
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<LookupItem>>(content);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching {lookupType}: {ex.Message}");
+                return null;
+            }
+        }  
+        public async Task<List<LookupItem>> GetLookupItemsAsync(string lookupType)
+        {
+            try
+            {
+                var apiUrl = $"/v1/lookups/{lookupType}";
                 var response = await _client.GetAsync(apiUrl);
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync();
@@ -42,7 +59,7 @@ namespace AkaratiCheckScanner.Services
         {
             try
             {
-                var apiUrl = $"{_baseUrl}/v1/user/createCheques";
+                var apiUrl = $"/v1/user/createCheques";
                 var jsonData = JsonConvert.SerializeObject(chequeRequest);
                 var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 

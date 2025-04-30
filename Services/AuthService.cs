@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AkaratiCheckScanner;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,12 +11,13 @@ using System.Threading.Tasks;
 public class AuthService
 {
     private readonly HttpClient _httpClient;
-    private readonly string _baseUrl;
 
     public AuthService()
     {
         _httpClient = new HttpClient();
-        _baseUrl = ConfigurationManager.AppSettings["BaseUrl"];
+        _httpClient.BaseAddress = new Uri(GlobalSetting.BaseUrl);
+        _httpClient.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", GlobalSetting.AuthToken);
     }
 
     public async Task<string> LoginAsync(string username, string password)
@@ -30,7 +32,7 @@ public class AuthService
         string jsonData = JsonConvert.SerializeObject(request);
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync($"{_baseUrl}/v1/token", content);
+        var response = await _httpClient.PostAsync($"/v1/token", content);
 
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
