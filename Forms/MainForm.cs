@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -8,11 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AkaratiCheckScanner;
 using AkaratiCheckScanner.Model;
-using AkaratiCheckScanner.Service;
 using AkaratiCheckScanner.Services;
-using Newtonsoft.Json;
 using ScanCRNet;
 using ScanCRNet.Utility;
 using Image = System.Drawing.Image;
