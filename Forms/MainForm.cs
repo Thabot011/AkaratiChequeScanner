@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AkaratiCheckScanner;
+using AkaratiCheckScanner.Services;
 using Newtonsoft.Json;
 using ScanCRNet;
 using ScanCRNet.Utility;
@@ -616,7 +617,9 @@ namespace SimpleScan
             }
 
             this.Enabled = false;
-            await CallAddChequeAPIAsync(createChequeModel);
+            //await CallAddChequeAPIAsync(createChequeModel);
+            await new ApiService(GlobalSetting.BaseUrl).CreateChequeAsync(createChequeModel);
+
             this.Enabled = true;
             MessageBox.Show("Cheque request is created successfully");
         }

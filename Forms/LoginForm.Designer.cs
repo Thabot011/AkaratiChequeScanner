@@ -1,4 +1,6 @@
-﻿namespace AkaratiCheckScanner
+﻿using System.Windows.Forms;
+
+namespace AkaratiCheckScanner
 {
     partial class LoginForm
     {
@@ -36,8 +38,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.loginPanel = new System.Windows.Forms.Panel();
+            this.loginpanel1 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.loginPanel.SuspendLayout();
+            this.loginpanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox1
@@ -110,22 +116,45 @@
             this.loginPanel.BackColor = System.Drawing.Color.Transparent;
             this.loginPanel.Controls.Add(this.button1);
             this.loginPanel.Controls.Add(this.tableLayoutPanel1);
-            this.loginPanel.Location = new System.Drawing.Point(427, 115);
+            this.loginPanel.Location = new System.Drawing.Point(30, 86);
             this.loginPanel.Name = "loginPanel";
             this.loginPanel.Size = new System.Drawing.Size(541, 387);
             this.loginPanel.TabIndex = 6;
+            // 
+            // loginpanel1
+            // 
+            this.loginpanel1.BackColor = System.Drawing.Color.White;
+            this.loginpanel1.Controls.Add(this.pictureBox1);
+            this.loginpanel1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.loginpanel1.Location = new System.Drawing.Point(917, 142);
+            this.loginpanel1.Name = "loginpanel1";
+            this.loginpanel1.Size = new System.Drawing.Size(371, 434);
+            this.loginpanel1.TabIndex = 7;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(101, 53);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(175, 50);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // LoginForm
             // 
             this.AutoSize = true;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1326, 705);
+            this.Controls.Add(this.loginpanel1);
             this.Controls.Add(this.loginPanel);
             this.Name = "LoginForm";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.loginPanel.ResumeLayout(false);
             this.loginPanel.PerformLayout();
+            this.loginpanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -140,5 +169,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel loginPanel;
+        private System.Windows.Forms.Panel loginpanel1;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
